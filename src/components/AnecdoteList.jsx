@@ -3,11 +3,11 @@ import { upVote } from "../reducers/anecdoteReducer"
 
 const AnecdoteList = () => {
     const currentState = useSelector(state => console.log("state",state))
-    //const anecdotes = useSelector(state => state.anecdotes)
+
     //use filter 
     const anecdotes = useSelector(state=>{
         console.log("state filter", state.filter)
-        if(state.filter === ''){
+        if(state.filter === ''){ //initially filter will be blank
             return state.anecdotes
         }
         else{
