@@ -1,4 +1,7 @@
 /* eslint-disable no-case-declarations */
+
+import { createSlice } from "@reduxjs/toolkit"
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -20,55 +23,32 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-export const upVote = (id) => {
-  return {
-    type: 'UPVOTE',
-    payload: { id }
-  }
-} 
-
-export const createAnecdote = (content) => {
-  return {
-    type : 'NEW_ANECDOTE',
-    payload : { 
-      content : content,
-      id : getId(),
-      votes : 0
-    }
-  }
-}
-
-const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-
-  switch (action.type) {   
-    case 'UPVOTE':     
-      const id = action.payload.id 
-      console.log("vote",id)
-      console.log("state",state)
+const anecdoteSlice = createSlice({
+  name : 'anecdotes',
+  initialState : initialState,
+  reducers : {
+    upVote(state,action){
+      const id = action.payload
       const voteToChange = state.find( n => n.id === id )
-      console.log("vote to change", voteToChange)
       const changedVote = {
         ...voteToChange,
         votes : voteToChange.votes + 1
       }
-      console.log("changed vote",changedVote)
       return state.map( anecdote => 
         anecdote.id != id ? anecdote : changedVote
       ).sort((a,b)=>a.votes-b.votes)
-  
-    case 'NEW_ANECDOTE':
-      console.log("new anecdote",action.payload) 
-      return [...state,action.payload].sort((a,b)=>a.votes-b.votes) 
-    
-    default:
-      return state.sort((a,b)=>a.votes-b.votes)
+
+    },
+    createAnecdote(state,action){
+      const newAnecdote = { 
+        content : action.payload,
+        id : getId(),
+        votes : 0
+      }
+      return [...state,newAnecdote].sort((a,b)=>a.votes-b.votes) 
+    }
   }
+})
 
-
-}
-
-
-
-export default reducer
+export const {upVote,createAnecdote} = anecdoteSlice.actions
+export default anecdoteSlice.reducer

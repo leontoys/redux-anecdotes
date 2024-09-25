@@ -7,7 +7,7 @@ const AnecdoteList = () => {
     //use filter 
     const anecdotes = useSelector(state=>{
         console.log("state filter", state.filter)
-        if(state.filter === ''){ //initially filter will be blank
+        if(state.filter === 'ALL'){ //initially filter will be blank
             return state.anecdotes
         }
         else{
