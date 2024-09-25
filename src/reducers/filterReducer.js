@@ -4,7 +4,6 @@ const filterReducer = (state = '',action) => {
             console.log("reached here")
             console.log("state",state)
             console.log("filter",action.payload)
-            const filter = action.payload
             return action.payload
         default:
             console.log(state)
