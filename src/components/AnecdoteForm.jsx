@@ -11,7 +11,6 @@ const addAnecdote = async (event)=>{
     event.preventDefault()
     const anecdote = event.target.anecdote.value
     event.target.anecdote.value = ''
-    //dispatch(createAnecdote(anecdote))
     const newAnecdote = await anecdoteService.createNew(anecdote)
     console.log("new anecdote",newAnecdote)   
     dispatch(createAnecdote(newAnecdote))    
