@@ -37,7 +37,7 @@ const anecdoteSlice = createSlice({
       }
       return state.map( anecdote => 
         anecdote.id != id ? anecdote : changedVote
-      ).sort((a,b)=>a.votes-b.votes)
+      ).sort((a,b)=>b.votes-a.votes)
 
     },
     appendAnecdote(state, action) {      
@@ -52,14 +52,38 @@ const anecdoteSlice = createSlice({
 export const initializeAnecdotes = () => {
   return async dispatch => {
     const anecdotes = await anecdoteService.getAll()
+    anecdotes.sort((a,b)=>b.votes-a.votes)
     dispatch(setAnecdotes(anecdotes))
   }
 }
 
 export const createAnecdote = content => {
   return async dispatch => {
-    const newAnecote = await anecdoteService.createNew(content)
-    dispatch(appendAnecdote(newAnecote))
+    const newAnecdote = await anecdoteService.createNew(content)
+    dispatch(appendAnecdote(newAnecdote))
+  }
+}
+
+export const addVote = id => {
+  return async dispatch => { 
+    //get all
+    const anecdotes = await anecdoteService.getAll()  
+    //find the one to change
+    const voteToChange = anecdotes.find( n => n.id === id )      
+    //add one vote
+    const changedVote = {
+      ...voteToChange,
+      votes : voteToChange.votes + 1
+    }  
+    //await response from axios
+    const newAnecdote = await anecdoteService.update(id,changedVote)
+    console.log("new",newAnecdote)
+    //update the list
+    const updatedAnecdotes = anecdotes.map( anecdote => 
+      anecdote.id != id ? anecdote : newAnecdote
+    ).sort((a,b)=>b.votes-a.votes)
+    //update state
+    dispatch(setAnecdotes(updatedAnecdotes))
   }
 }
 
