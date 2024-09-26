@@ -15,6 +15,16 @@ const notificationSlice = createSlice({
     }
 })
 
+export const setNotification = (message, delay) => {
+    return (dispatch) => {
+        const delayInSec = delay * 1000
+        dispatch(showNotification(message)) // Show the notification
+        setTimeout(() => {
+            dispatch(hideNotification()) // Hide notification after 3 seconds
+        }, delayInSec)     
+    }
+} 
+
 // Export the action creators
 export const { showNotification, hideNotification } = notificationSlice.actions
 
